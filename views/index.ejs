@@ -1,3 +1,5 @@
 <% include ./partials/header%>
-<h1>Hello world!</h1>
+<% for (var i = 0; i < results.length; i++){%>
+    <h1>Title: <%= results[i].Title%></h1>
+<% } %>
 <% include ./partials/footer%>

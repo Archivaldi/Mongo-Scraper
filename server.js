@@ -15,6 +15,8 @@ var collections = ["scrapedData"];
 var request = require("request");
 
 var db = mongojs(databaseUrl, collections);
+
+
 db.on("error", function(error) {
   console.log("Database Error:", error);
 });
@@ -23,19 +25,16 @@ db.on("error", function(error) {
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
-    res.render("index");
+    request.get("https://www.foxnews.com/politics", function(err,response, body){
+        var $ = cheerio.load(body);
+        var results = [];
+        $("h4.title").each(function(i, element){
+          var title = $(element).text();
+          results.push({Title: title});
+        })
+        res.render("index", {results: results});
+    });
   });
-
-
-  request.get("https://www.foxnews.com/politics", function(err,response, body){
-      var $ = cheerio.load(body);
-      var results = [];
-      $("h4.title").each(function(i, element){
-        var title = $(element).text();
-        results.push({Title: title});
-      })
-      console.log(results);
-  })
 
   app.listen("3000", function(){
       console.log("Server running on 3000");

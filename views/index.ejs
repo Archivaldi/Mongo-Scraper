@@ -1,5 +1,29 @@
 <% include ./partials/header%>
 <% for (var i = 0; i < results.length; i++){%>
-    <h1>Title: <%= results[i].Title%></h1>
+<article>
+        <h1><%= results[i].Title %></h1>
+        <h4><%= results[i].Content %></h4>
+        <a href="<%= results[i].Link %>"><%= results[i].Link %></a>
+        <button class="saveArticle">Save Article</button>
+</article>
 <% } %>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script>
+    $(document).on("click", ".saveArticle", function (){
+        event.preventDefault();
+        var title = $(this).parent().children().eq(0).text();
+        var link = $(this).parent().children().eq(2).text();
+        var content = $(this).parent().children().eq(1).text();
+        $.ajax({
+            url: "/saveArticle",
+            method: "POST",
+            data: {title: title, link: link, content: content} 
+        }).then(function(response){
+            console.log(response)
+        })
+    })
+</script>
 <% include ./partials/footer%>

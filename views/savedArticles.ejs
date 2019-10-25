@@ -1,0 +1,21 @@
+<% include ./partials/header%>
+<% for (var i = 0; i < results.length; i++) { %>
+<div>
+    <h1><%= results[i].Title %></h1>
+    <h4><%= results[i].Content %></h4>
+    <a href="<%= results[i].Link %>"><%= results[i].Link %></a>
+    <% if (results[i].Comments) {%>
+        <% for (let p = 0; p < results[i].Comments.length; p++) { %>
+            <p><%= results[i].Comments[p]%></p>
+        <% } %>
+    <% } %>
+    <form action="/addComment" method="POST">
+        <input type="hidden" name="id" value="<%= results[i]._id%>">
+        <input type="text" name="newComment" style="width:75%;" placeholder="Write a comment here">
+        <div>
+            <button class="btn btn-primary btn-lg">Submit</button>
+        </div>
+    </form>
+</div>
+<% } %>
+<% include ./partials/footer%>

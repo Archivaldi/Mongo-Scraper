@@ -13,12 +13,23 @@
                         <h1><%= results[i].Title %></h1>
                         <h4><%= results[i].Content %></h4>
                         <a href="<%= results[i].Link %>" style="font-size: 20px;">Read more</a>
-                        <% if (results[i].Comments) {%>
-                            <% for (let p = 0; p < results[i].Comments.length; p++) { %>
-                            <p><%= results[i].Comments[p]%></p>
-                            <% } %>
-                        <% } %>
-                        <br><br>
+                        <div>
+                                <% if (results[i].Comments) {%>
+                                    <br><br>
+                                            <% for (let p = 0; p < results[i].Comments.length; p++) { %>
+        
+                                                <p style="font-size: 25px; width: 50%">Comment <%=p + 1%>: <span><%= results[i].Comments[p]%></span> 
+                                                    <span class="pull-right">
+                                                        <button class="deleteComment">
+                                                            X
+                                                        </button>
+                                                    </span>
+                                                </p>
+                                    <% } %>
+        
+                                <% } %>
+                        </div>
+                        <br>
                     <form action="/addComment" method="POST">
                         <input type="hidden" name="id" value="<%= results[i]._id%>">
                         <input type="text" name="newComment" style="width:50%; font-size: 20px; padding-left: 5px;" placeholder="Write a comment here"><br><br>
@@ -33,3 +44,18 @@
     <% } %>
 </div>
 <% include ./partials/footer%>
+<script>
+    $(document).on("click", ".deleteComment", function(){
+        var comment = $(this).parent().parent().children().eq(0).text();
+        var id = $(this).parent().parent().parent().parent().children().eq(5).children().eq(0).val();
+        $.ajax({
+            url: "/deleteComment",
+            method: "POST",
+            data: {id:id, comment: comment}
+        }).then(response => {
+            console.log("Comment deleted");
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,27 +1,39 @@
 <% include ./partials/header%>
-<% for (var i = 0; i < results.length; i++){%>
-<article>
-        <h1><%= results[i].Title %></h1>
-        <h4><%= results[i].Content %></h4>
-        <a href="<%= results[i].Link %>"><%= results[i].Link %></a>
-        <button class="saveArticle">Save Article</button>
-</article>
-<% } %>
+<div class="container main">
+    <% for (var i = 0; i < 10; i++){%>
+    <div class="thumbnail" style="padding: 1%;">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="<%= results[i].Image%>" alt="Image">
+            </div>
+            <div class="col-md-9">
+                <h1><%= results[i].Title %></h1>
+                <h3><%= results[i].Content %></h3>
+                <div>
+                    <a href="<%= results[i].Link %>">Read more</a>
+                    <button class="saveArticle btn btn-lg btn-primary pull-right">Save Article</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script>
-    $(document).on("click", ".saveArticle", function (){
+    $(document).on("click", ".saveArticle", function () {
         event.preventDefault();
-        var title = $(this).parent().children().eq(0).text();
-        var link = $(this).parent().children().eq(2).text();
-        var content = $(this).parent().children().eq(1).text();
+        var image = $(this).parent().parent().parent().children().eq(0).children().eq(0).attr("src");
+        var title = $(this).parent().parent().children().eq(0).text();
+        var link = $(this).parent().children().eq(0).attr("href");
+        var content = $(this).parent().parent().children().eq(1).text();
         $.ajax({
             url: "/saveArticle",
             method: "POST",
-            data: {title: title, link: link, content: content} 
-        }).then(function(response){
+            data: { title: title, link: link, content: content, image: image }
+        }).then(function (response) {
             console.log(response)
         })
     })

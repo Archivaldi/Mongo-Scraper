@@ -1,0 +1,15 @@
+.main {
+    width: 75%;
+};
+
+.thumbnail {
+    padding: 40px;
+};
+
+body {
+    background-image: url("../images/pattern.jpg");
+};
+
+a {
+    font-size: 10px;
+};

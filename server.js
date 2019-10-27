@@ -4,7 +4,8 @@ const app = express();
 app.set("view engine", "ejs");
 
 const bodyParser = require("body-parser");
-app.use(bodyParser())
+app.use(bodyParser());
+app.use(express.static(__dirname + '/public'));
 
 const cheerio = require("cheerio");
 
@@ -22,20 +23,20 @@ db.on("error", function (error) {
     console.log("Database Error:", error);
 });
 
-function updateDb(title, link, content) {
+function updateDb(title, link, content, image) {
     db.scrapedData.update(
         { Title: title, Link: link },
-        { $set: { Title: title, Link: link, Content: content } },
+        { $set: { Title: title, Link: link, Content: content, Image: image } },
         { upsert: true },
     );
 };
 
 app.post("/saveArticle", function (req, res) {
-    //res.json(req.body);
+    var image = req.body.image;
     var title = req.body.title;
     var link = req.body.link;
     var content = req.body.content;
-    updateDb(title, link, content);
+    updateDb(title, link, content, image);
 })
 
 app.get("/savedArticles", function (req, res) {
@@ -61,6 +62,7 @@ app.get("/", function (req, res) {
         var $ = cheerio.load(body);
         var results = [];
         $("h4.title").each(function (i, element) {
+            var img = $(element).parent().parent().parent().children().eq(0).children().eq(0).children().eq(0).attr("src");
             var title = $(element).text();
             var link = $(element).children().eq(0).attr("href");
             var content = $(element).parent().parent().children().eq(1).text();
@@ -68,7 +70,7 @@ app.get("/", function (req, res) {
                 link = "https://www.foxnews.com" + link;
             }
             if (content != "")
-                results.push({ Title: title, Link: link, Content: content });
+                results.push({ Title: title, Link: link, Content: content, Image: img });
         });
 
 

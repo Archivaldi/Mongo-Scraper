@@ -31,20 +31,18 @@ function updateDb(title, link, content, image) {
     );
 };
 
-const deleteComment = (id, comment) => {
-    db.scrapedData.update({"_id": mongojs.ObjectID(id)}, {$pull:{Comments: {$in:[comment]}}}, function(error, result){
-        if (error){
-            console.log(error)
-        } 
-    });
-}
 
-app.post("/deleteComment", function(req,res){
+app.post("/deleteComment", function (req, res) {
     let comment = req.body.comment;
     let id = req.body.id;
-    deleteComment(id, comment);
-    res.redirect("/savedArticles");
-})
+    db.scrapedData.update({ "_id": mongojs.ObjectID(id) }, { $pull: { Comments: comment } }, function (error, result) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.redirect("/savedArticles");
+        }
+    });
+});
 
 app.post("/saveArticle", function (req, res) {
     var image = req.body.image;
@@ -52,7 +50,7 @@ app.post("/saveArticle", function (req, res) {
     var link = req.body.link;
     var content = req.body.content;
     updateDb(title, link, content, image);
-})
+});
 
 app.get("/savedArticles", function (req, res) {
     db.scrapedData.find(function (error, result) {
@@ -69,7 +67,7 @@ app.post("/addComment", function (req, res) {
         }
     });
     res.redirect("/savedArticles");
-})
+});
 
 // Main route (simple Hello World Message)
 app.get("/", function (req, res) {

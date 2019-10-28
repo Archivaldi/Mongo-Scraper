@@ -38,6 +38,10 @@
                             <button class="btn btn-primary btn-lg pull-center">Comment</button>
                         </div>
                     </form>
+                    <form action="/deleteArticle" method="POST">
+                        <input type="hidden" name="id" value="<%= results[i]._id%>">
+                        <button class="btn btn-primary btn-lg pull-right">Delete Article</button>
+                    </form>
                 </div>
                 </div>
             </div>

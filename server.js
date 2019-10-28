@@ -44,6 +44,17 @@ app.post("/deleteComment", function (req, res) {
     });
 });
 
+app.post("/deleteArticle", function(req,res){
+    let id = req.body.id;
+    db.scrapedData.remove({_id: mongojs.ObjectID(id)}, function(error, result){
+        if (error){
+            console.log(error);
+        } else {
+            res.redirect("/savedArticles");
+        }
+    });
+})
+
 app.post("/saveArticle", function (req, res) {
     var image = req.body.image;
     var title = req.body.title;

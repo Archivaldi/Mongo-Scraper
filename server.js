@@ -31,19 +31,19 @@ function updateDb(title, link, content, image) {
     );
 };
 
+const deleteComment = (id, comment) => {
+    db.scrapedData.update({"_id": mongojs.ObjectID(id)}, {$pull:{Comments: {$in:[comment]}}}, function(error, result){
+        if (error){
+            console.log(error)
+        } 
+    });
+}
+
 app.post("/deleteComment", function(req,res){
     let comment = req.body.comment;
     let id = req.body.id;
-    const deleteComment = (id, comment) => {
-        db.scrapedData.update({"_id": mongojs.ObjectID(id)}, {$pull:{Comments: {$in:[comment]}}}, function(error, result){
-            if (error){
-                console.log(error)
-            } 
-        });
-        res.redirect("/savedArticles");
-    }
-    
     deleteComment(id, comment);
+    res.redirect("/savedArticles");
 })
 
 app.post("/saveArticle", function (req, res) {
